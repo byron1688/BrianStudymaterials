@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transformer 复习指南 · Study Guide | 中文 / English</title>
+<style>
+  @font-face {
+    font-family: 'StudySerif';
+    src: local('Georgia'), local('Times New Roman'), local('serif');
+  }
+  :root {
+    --bg: #FAFAF7;
+    --bg-card: #FFFFFF;
+    --bg-code: #F5F3EE;
+    --bg-formula: #F0EDE6;
+    --text: #1A1A1A;
+    --text-secondary: #555;
+    --text-muted: #888;
+    --accent: #2D5A9E;
+    --accent-light: #E8EFF8;
+    --border: #E0DDD6;
+    --border-light: #EDEBE5;
+    --green: #1B7A3D;
+    --green-bg: #E6F4EA;
+    --green-border: #A8DAB5;
+    --yellow: #8A6D00;
+    --yellow-bg: #FFF8E1;
+    --yellow-border: #F0D88A;
+    --red: #C62828;
+    --red-bg: #FFEBEE;
+    --red-border: #EF9A9A;
+    --blue: #1565C0;
+    --blue-bg: #E3F2FD;
+    --blue-border: #90CAF9;
+    --purple: #6A1B9A;
+    --purple-bg: #F3E5F5;
+    --purple-border: #CE93D8;
+    --orange: #B15C00;
+    --orange-bg: #FFF1E0;
+    --orange-border: #F0C08A;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
+    --font-body: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+    --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    --font-display: Georgia, 'StudySerif', serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1A1A1E; --bg-card: #232328; --bg-code: #2A2A30; --bg-formula: #28282E;
+      --text: #E8E6E1; --text-secondary: #AAA; --text-muted: #777;
+      --accent: #6BA3E8; --accent-light: #1E2D42;
+      --border: #3A3A40; --border-light: #333338;
+      --green: #66BB6A; --green-bg: #1B2E1F; --green-border: #2E5A33;
+      --yellow: #FFD54F; --yellow-bg: #2E2A1B; --yellow-border: #5A4E2E;
+      --red: #EF5350; --red-bg: #2E1B1B; --red-border: #5A2E2E;
+      --blue: #64B5F6; --blue-bg: #1B252E; --blue-border: #2E4A5A;
+      --purple: #CE93D8; --purple-bg: #2A1B2E; --purple-border: #4A2E5A;
+      --orange: #FFB74D; --orange-bg: #2E2416; --orange-border: #5A4530;
+      --shadow: 0 1px 3px rgba(0,0,0,0.2); --shadow-lg: 0 4px 12px rgba(0,0,0,0.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1A1A1E; --bg-card: #232328; --bg-code: #2A2A30; --bg-formula: #28282E;
+    --text: #E8E6E1; --text-secondary: #AAA; --text-muted: #777;
+    --accent: #6BA3E8; --accent-light: #1E2D42;
+    --border: #3A3A40; --border-light: #333338;
+    --green: #66BB6A; --green-bg: #1B2E1F; --green-border: #2E5A33;
+    --yellow: #FFD54F; --yellow-bg: #2E2A1B; --yellow-border: #5A4E2E;
+    --red: #EF5350; --red-bg: #2E1B1B; --red-border: #5A2E2E;
+    --blue: #64B5F6; --blue-bg: #1B252E; --blue-border: #2E4A5A;
+    --purple: #CE93D8; --purple-bg: #2A1B2E; --purple-border: #4A2E5A;
+    --orange: #FFB74D; --orange-bg: #2E2416; --orange-border: #5A4530;
+  }
+  :root[data-theme="light"] {
+    --bg: #FAFAF7; --bg-card: #FFFFFF; --bg-code: #F5F3EE; --bg-formula: #F0EDE6;
+    --text: #1A1A1A; --text-secondary: #555; --text-muted: #888;
+    --accent: #2D5A9E; --accent-light: #E8EFF8;
+    --border: #E0DDD6; --border-light: #EDEBE5;
+    --green: #1B7A3D; --green-bg: #E6F4EA; --green-border: #A8DAB5;
+    --yellow: #8A6D00; --yellow-bg: #FFF8E1; --yellow-border: #F0D88A;
+    --red: #C62828; --red-bg: #FFEBEE; --red-border: #EF9A9A;
+    --blue: #1565C0; --blue-bg: #E3F2FD; --blue-border: #90CAF9;
+    --purple: #6A1B9A; --purple-bg: #F3E5F5; --purple-border: #CE93D8;
+    --orange: #B15C00; --orange-bg: #FFF1E0; --orange-border: #F0C08A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--font-body);
+    line-height: 1.7; padding: 0 16px 80px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  header { padding: 40px 0 24px; border-bottom: 2px solid var(--border); margin-bottom: 32px; }
+  header h1 { font-family: var(--font-display); font-size: 1.9rem; margin-bottom: 8px; }
+  header p { color: var(--text-secondary); font-size: 0.95rem; }
+  .source-note {
+    margin-top: 14px; padding: 10px 14px; background: var(--accent-light);
+    border-radius: 8px; font-size: 0.85rem; color: var(--text-secondary);
+  }
+
+  nav.toc {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 36px; box-shadow: var(--shadow);
+  }
+  nav.toc h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 10px; }
+  nav.toc ol { padding-left: 1.2em; }
+  nav.toc li { margin-bottom: 4px; font-size: 0.92rem; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 44px; }
+  h2 {
+    font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 14px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border-light);
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2 .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%; background: var(--accent);
+    color: #fff; font-size: 0.85rem; font-family: var(--font-body); flex-shrink: 0;
+  }
+  h3 { font-size: 1.08rem; margin: 20px 0 10px; color: var(--text); }
+  p { margin-bottom: 12px; color: var(--text-secondary); }
+  strong { color: var(--text); font-weight: 600; }
+  ul, ol { margin: 10px 0 14px 1.3em; color: var(--text-secondary); }
+  li { margin-bottom: 6px; }
+  .en { color: var(--text-muted); font-size: 0.88em; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem;
+    font-weight: 700; padding: 2px 10px; border-radius: 20px; letter-spacing: 0.02em;
+    vertical-align: middle; white-space: nowrap;
+  }
+  .badge-teacher { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .badge-add { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+  .badge-exam { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; margin: 14px 0; box-shadow: var(--shadow);
+  }
+  .callout {
+    border-radius: 10px; padding: 14px 16px; margin: 14px 0; border: 1px solid;
+    font-size: 0.94rem;
+  }
+  .callout-analogy { background: var(--green-bg); border-color: var(--green-border); }
+  .callout-analogy .label { color: var(--green); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 4px; }
+  .callout-add { background: var(--orange-bg); border-color: var(--orange-border); }
+  .callout-add .label { color: var(--orange); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 4px; }
+  .callout-warn { background: var(--yellow-bg); border-color: var(--yellow-border); }
+  .callout-warn .label { color: var(--yellow); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 4px; }
+  .callout-exam { background: var(--purple-bg); border-color: var(--purple-border); }
+  .callout-exam .label { color: var(--purple); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 4px; }
+
+  .formula {
+    background: var(--bg-formula); border-radius: 8px; padding: 14px 18px;
+    font-family: var(--font-mono); font-size: 0.92rem; margin: 12px 0;
+    overflow-x: auto; color: var(--text);
+  }
+  .formula .comment { color: var(--text-muted); font-style: italic; }
+
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border-light); }
+  th { color: var(--text-muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; }
+  td { color: var(--text-secondary); }
+  td strong { color: var(--text); }
+
+  .diagram { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0; overflow-x: auto; }
+  .diagram svg { display: block; margin: 0 auto; max-width: 100%; }
+
+  .flow-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 14px 0; }
+  .flow-box {
+    border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px;
+    background: var(--bg-card); font-size: 0.85rem; text-align: center; min-width: 70px;
+  }
+  .flow-box.hot { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  .flow-arrow { display: flex; align-items: center; color: var(--text-muted); font-size: 1.1rem; }
+
+  .stack {
+    display: flex; flex-direction: column; gap: 6px; max-width: 320px; margin: 16px auto;
+  }
+  .stack .layer {
+    border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px;
+    background: var(--bg-card); font-size: 0.85rem; text-align: center;
+  }
+  .stack .layer.attn { border-color: var(--accent); background: var(--accent-light); }
+  .stack .layer.ffn { border-color: var(--green-border); background: var(--green-bg); }
+  .stack .layer.norm { border-color: var(--border); background: var(--bg-code); font-size: 0.78rem; color: var(--text-muted); }
+  .stack .layer.mask { border-color: var(--red-border); background: var(--red-bg); }
+  .stack .layer.cross { border-color: var(--purple-border); background: var(--purple-bg); }
+
+  .qkv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+  .qkv-card { border-radius: 10px; padding: 14px; text-align: center; border: 1px solid; }
+  .qkv-card.q { background: var(--blue-bg); border-color: var(--blue-border); }
+  .qkv-card.k { background: var(--green-bg); border-color: var(--green-border); }
+  .qkv-card.v { background: var(--orange-bg); border-color: var(--orange-border); }
+  .qkv-card .letter { font-size: 1.6rem; font-weight: 700; font-family: var(--font-display); }
+  .qkv-card .q .letter { color: var(--blue); }
+  .qkv-card.q .letter { color: var(--blue); }
+  .qkv-card.k .letter { color: var(--green); }
+  .qkv-card.v .letter { color: var(--orange); }
+  .qkv-card .desc { font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px; }
+
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  @media (max-width: 600px) { .summary-grid { grid-template-columns: 1fr; } .qkv-grid { grid-template-columns: 1fr; } }
+  .summary-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .summary-card h4 { font-size: 0.95rem; margin-bottom: 6px; color: var(--accent); }
+  .summary-card p { font-size: 0.86rem; margin: 0; }
+
+  details { margin: 10px 0; }
+  summary { cursor: pointer; font-weight: 600; color: var(--accent); padding: 4px 0; }
+  details[open] summary { margin-bottom: 8px; }
+  details .card { margin-top: 6px; }
+
+  footer { text-align: center; color: var(--text-muted); font-size: 0.82rem; padding-top: 24px; border-top: 1px solid var(--border); }
+  h2 { flex-wrap: wrap; }
+  h2 .badge { white-space: normal; max-width: 100%; font-family: var(--font-body); }
+  a { color: var(--accent); }
+  .stack .layer + .layer::before { content: "↓"; display: block; color: var(--text-muted); }
+  .figure-caption { font-size: .82rem; margin-top: 10px; }
+  .table-scroll { overflow-x: auto; }
+[hidden] { display: none !important; }
+.language-nav { position: sticky; top: 0; z-index: 10; display: flex; gap: 8px; justify-content: center; background: var(--bg); padding: 12px; border-bottom: 1px solid var(--border); }
+.language-nav button { font: inherit; cursor: pointer; color: var(--text); background: var(--bg-card); border: 1px solid var(--border); padding: 7px 18px; border-radius: 8px; }
+.language-nav button[aria-pressed="true"] { background: var(--accent); color: white; }
+section { scroll-margin-top: 76px; }
+@media print { .language-nav { display: none; } }
+</style>
+</head>
+<body><nav class="language-nav" aria-label="Language / 语言"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">English</button></nav><div id="guide-zh" lang="zh-CN">
+
+<div class="wrap">
+  <header>
+    <h1>Transformer 通俗复习指南</h1>
+    <p>基于 Alan Ritter（CS4641, Neural Networks for Text）课上的讲义，用大白话重新讲一遍 Transformer，并把老师带过但没展开、或者没讲但你应该知道的部分补全。</p>
+    <div class="source-note">
+      📄 原始材料：<code>CS4641_ML_Alan_Ritter/nn_text.pdf</code>（Attention → Self-Attention → Transformer → BERT/GPT 部分）。文中用 <span class="badge badge-teacher">老师讲的</span> 标注课件原内容，<span class="badge badge-add">补充</span> 标注课件没细讲但很重要的部分，<span class="badge badge-exam">常考点</span> 标注面试/考试高频问题。
+    </div>
+  </header>
+
+  <div class="callout callout-warn"><div class="label">核对说明 · 2026-10-06</div>已对照本地 nn_text.pdf 的相关页与原始论文修订。保留老师的教学顺序；对简化记号、近似数字与严格结论的差别单独说明。配图为讲解示意，不是老师原图或模型实测。</div>
+  <nav class="toc">
+    <h2>目录</h2>
+    <ol>
+      <li><a href="#sec0">为什么会有 Transformer —— RNN 的痛点</a></li>
+      <li><a href="#sec1">Attention 机制：从"全部记住"到"按需查找"</a></li>
+      <li><a href="#sec2">Self-Attention：句子自己跟自己做 Attention</a></li>
+      <li><a href="#sec3">Q / K / V：Attention 公式背后的三个角色</a></li>
+      <li><a href="#sec4">Scaled Dot-Product：补全缩放因子 √d</a></li>
+      <li><a href="#sec5">Multi-Head Attention：为什么要开多个"头"</a></li>
+      <li><a href="#sec6">Positional Encoding：没有顺序感的模型怎么知道词的位置</a></li>
+      <li><a href="#sec7">Transformer 完整模块：残差、LayerNorm、FFN</a></li>
+      <li><a href="#sec8">Encoder vs Decoder：Masked Attention 和 Cross-Attention</a></li>
+      <li><a href="#sec9">训练 vs 推理：Teacher Forcing</a></li>
+      <li><a href="#sec10">Tokenization 补充：BPE / WordPiece</a></li>
+      <li><a href="#sec11">Transformer 家族：BERT / GPT / T5</a></li>
+      <li><a href="#sec12">一页总结 + 面试高频问题</a></li>
+    </ol>
+  </nav>
+
+  <section id="sec0">
+    <h2><span class="num">0</span>为什么会有 Transformer <span class="badge badge-teacher">老师讲的</span></h2>
+    <p>在 Transformer 之前，处理句子的标准做法是 <strong>RNN / LSTM 编码器-解码器（Encoder-Decoder）</strong>：把整句话一个词一个词地"读"进一个固定大小的向量里，再从这个向量"吐"出翻译结果。</p>
+    <div class="callout callout-analogy">
+      <div class="label">类比</div>
+      这就像让你听完一整段话，只许记住一句话摘要，然后凭这句摘要去回答后面所有问题——句子一长，细节肯定丢光。
+    </div>
+    <p>老师在 PDF 第 114 页指出：固定大小表示难以承载长句，LSTM 也难记住很久以前的信息。另一个结构性限制是序列计算：</p>
+    <ul>
+      <li><strong>固定大小的向量装不下长句子</strong> <span class="en">a fixed-size representation doesn't scale</span></li>
+      <li><strong>必须按顺序一步步算，没法并行</strong><span class="badge badge-add">补充</span>：同一序列的状态有前后依赖，不能像 Transformer 那样并行计算所有位置；不同样本仍可批处理</li>
+    </ul>
+    <p>第一步修正方案是 <strong>Attention</strong>：解码器每生成一个词，不再只看那一个"摘要向量"，而是回头去看编码器每一个位置的隐藏状态，按需加权。</p>
+  </section>
+
+  <section id="sec1">
+    <h2><span class="num">1</span>Attention 机制 <span class="badge badge-teacher">老师讲的</span></h2>
+    <p>核心思想：<strong>解码器在生成第 i 个词时，给编码器的每一个输入位置 j 打一个"相关度分数"，再按这个分数做加权平均</strong>，而不是只用一个固定向量。</p>
+    <div class="formula">
+      e<sub>ij</sub> = f(h̄<sub>i</sub>, h<sub>j</sub>) <span class="comment">// 未归一化的"相关度"分数，h̄_i 是解码器状态，h_j 是编码器第 j 个位置的状态</span><br><br>
+      α<sub>ij</sub> = softmax<sub>j</sub>(e<sub>ij</sub>) <span class="comment">// 归一化成一个概率分布（权重加起来=1）</span><br><br>
+      c<sub>i</sub> = Σ<sub>j</sub> α<sub>ij</sub> h<sub>j</sub> <span class="comment">// 按权重把所有 h_j 加权求和，得到"上下文向量" context vector</span>
+    </div>
+    <p>老师在 PDF 第 142–145 页给了三种打分方式。下表把加性打分补写完整：tanh 后还需投影成<strong>标量</strong>，才能用于每个输入位置的 softmax。</p>
+    <table>
+      <tr><th>名称</th><th>公式</th><th>提出者</th></tr>
+      <tr><td><strong>Additive（加性）</strong></td><td>v<sub>a</sub>ᵗ tanh(W<sub>a</sub>[h̄<sub>i</sub>; h<sub>j</sub>] + b<sub>a</sub>)</td><td>Bahdanau et al. 2014</td></tr>
+      <tr><td><strong>Dot product（点积）</strong></td><td>h̄<sub>i</sub> · h<sub>j</sub></td><td>Luong et al. 2015</td></tr>
+      <tr><td><strong>Bilinear（双线性）</strong></td><td>h̄<sub>i</sub>ᵗ W h<sub>j</sub></td><td>Luong et al. 2015</td></tr>
+    </table>
+    <div class="callout callout-analogy">
+      <div class="label">类比</div>
+      这就像开卷考试：你不需要死记整本书（固定向量），每道题你都可以快速翻书，找到跟这道题最相关的那几页（高权重的 h_j），重点看那几页。
+    </div>
+    <p>这一步之后，编码器的隐藏状态开始专门负责"表达每个词的含义"，解码器的隐藏状态专门负责"决定该看哪里"——这个分工思想直接导向了下一步：<strong>如果"查找相关内容"这件事这么好用，为什么不让句子内部的词互相之间也做这件事？</strong> 这就是 Self-Attention。</p>
+  </section>
+
+  <section id="sec2">
+    <h2><span class="num">2</span>Self-Attention <span class="badge badge-teacher">老师讲的</span></h2>
+    <p>Self-Attention 的意思是：<strong>Q/K/V 来自同一序列；在这里的双向例子中，每个位置可以关注整句（包括自己）</strong>，用来重新计算出一个"更懂上下文"的自己。</p>
+    <div class="formula">
+      α<sub>i,j</sub> = softmax<sub>j</sub>(x<sub>i</sub>ᵗ x<sub>j</sub>) <span class="comment">// 词 i 对词 j 的注意力权重</span><br><br>
+      x'<sub>i</sub> = Σ<sub>j</sub> α<sub>i,j</sub> x<sub>j</sub> <span class="comment">// 词 i 的新表示 = 所有词的加权平均</span>
+    </div>
+    <div class="callout callout-analogy">
+      <div class="label">类比</div>
+      一个教室里每个学生（词）都抬头看一遍全班所有同学（包括自己），根据"跟我讨论的话题相关不相关"决定听谁讲得多一点，然后把听到的内容融合进自己的笔记里——这一轮下来，每个人的笔记都融入了全班的上下文。
+    </div>
+<div class="diagram"><svg viewBox="0 0 640 255" role="img" aria-labelledby="attn-title attn-desc" xmlns="http://www.w3.org/2000/svg"><title id="attn-title">great 位置对四个位置做注意力</title><desc id="attn-desc">四个输入都参与加权求和，包括 great 自己；示意权重总和为一，不是实测结果。</desc><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="var(--accent)"/></marker></defs><g font-family="var(--font-body)" text-anchor="middle" fill="var(--text)"><text x="320" y="23" font-size="14">Query：great → 对所有位置打分 → softmax 得到权重</text><rect x="20" y="47" width="120" height="48" rx="8" fill="var(--accent-light)" stroke="var(--accent)"/><text x="80" y="67" font-size="14">the</text><text x="80" y="86" font-size="12">α = 0.1</text><path d="M80 95 L80 123 L320 169" stroke="var(--accent)" fill="none" marker-end="url(#arrow)"/><text x="80" y="118" font-size="11">0.1 × x_the</text><rect x="180" y="47" width="120" height="48" rx="8" fill="var(--accent-light)" stroke="var(--accent)"/><text x="240" y="67" font-size="14">movie</text><text x="240" y="86" font-size="12">α = 0.5</text><path d="M240 95 L240 123 L320 169" stroke="var(--accent)" fill="none" marker-end="url(#arrow)"/><text x="240" y="118" font-size="11">0.5 × x_movie</text><rect x="340" y="47" width="120" height="48" rx="8" fill="var(--accent-light)" stroke="var(--accent)"/><text x="400" y="67" font-size="14">was</text><text x="400" y="86" font-size="12">α = 0.1</text><path d="M400 95 L400 123 L320 169" stroke="var(--accent)" fill="none" marker-end="url(#arrow)"/><text x="400" y="118" font-size="11">0.1 × x_was</text><rect x="500" y="47" width="120" height="48" rx="8" fill="var(--accent-light)" stroke="var(--accent)"/><text x="560" y="67" font-size="14">great</text><text x="560" y="86" font-size="12">α = 0.3</text><path d="M560 95 L560 123 L320 169" stroke="var(--accent)" fill="none" marker-end="url(#arrow)"/><text x="560" y="118" font-size="11">0.3 × x_great</text><rect x="218" y="172" width="204" height="38" rx="8" fill="var(--green-bg)" stroke="var(--green-border)"/><text x="320" y="197" font-size="14">求和 → x′_great</text><text x="320" y="237" font-size="12">四项全部参与；0.1 + 0.5 + 0.1 + 0.3 = 1</text></g></svg><p class="figure-caption">依照老师 PDF 第 156 页重绘的简化示意（Q=K=V=X，省略缩放）。权重仅用于讲解，不是模型实测，也不代表固定语言关系。标准 Transformer 加权的是投影后的 V。</p></div>
+    <div class="callout callout-add">
+      <div class="label">补充</div>
+      注意这里 Self-Attention 跟 RNN/CNN 最大的区别：<strong>句子中任意两个词之间的"距离"都是 1 步</strong>（直接算点积），不管它们隔了多远；而 RNN 要挨个传递隐藏状态，CNN 要叠很多层卷积才能让两个远的词"看到"对方。这就是 Transformer 擅长捕捉长距离依赖的根本原因。同一层所有位置都使用上一层已知的表示，<strong>可以同时计算</strong>，没有 RNN 同层沿序列的递推依赖；这有利于训练并行化。它们并非统计独立，稠密注意力的打分与聚合通常需 O(n²d) 运算，速度优势取决于序列长度、硬件和实现。
+    </div>
+  </section>
+
+  <section id="sec3">
+    <h2><span class="num">3</span>Q / K / V 三个角色 <span class="badge badge-add">补充</span></h2>
+    <p>老师的公式里直接用 x<sub>i</sub>ᵗx<sub>j</sub> 算分数，这是简化版。真正的 Transformer 论文（Vaswani et al. 2017）里，每个词会先被投影成三个不同的向量，分别叫 <strong>Query（查询）</strong>、<strong>Key（钥匙/标签）</strong>、<strong>Value（内容）</strong>：</p>
+    <div class="qkv-grid">
+      <div class="qkv-card q"><div class="letter">Q</div><div class="desc">我在找什么？<br><span class="en">"我是哪个词，我想了解和我相关的信息"</span></div></div>
+      <div class="qkv-card k"><div class="letter">K</div><div class="desc">我能提供什么标签？<br><span class="en">别人用它来判断"我跟你相关吗"</span></div></div>
+      <div class="qkv-card v"><div class="letter">V</div><div class="desc">如果你选中我，给你什么内容？<br><span class="en">实际被加权求和的内容</span></div></div>
+    </div>
+    <div class="callout callout-analogy">
+      <div class="label">类比：图书馆检索</div>
+      Query = 你在搜索框里输入的关键词；Key = 每本书书脊上贴的标签；Value = 书里真正的内容。系统拿你的 Query 去跟每本书的 Key 比对相似度，算出一个"相关度"，然后按相关度把各本书的 Value（内容）加权混合给你——越相关的书，内容占比越大。
+    </div>
+    <div class="formula">
+      Q = X W<sub>Q</sub>&nbsp;&nbsp; K = X W<sub>K</sub>&nbsp;&nbsp; V = X W<sub>V</sub> <span class="comment">// X 是本层输入表示矩阵（每行一个 token；后续层是上一层的输出），W_Q/W_K/W_V 是可学习的参数</span><br><br>
+      Attention(Q, K, V) = softmax(Q Kᵗ / √d<sub>k</sub>) V <span class="comment">// 标准公式，见下一节</span>
+    </div>
+    <p>对照老师的简化公式：Q=K=V=X，省略投影与缩放，就得到 x<sub>i</sub>ᵗx<sub>j</sub>。但<strong>老师的 W<sub>k</sub> 不是标准 W<sub>K</sub></strong>：它是第 k 个头的双线性打分矩阵，同时概括 Query 与 Key 的投影。若使用列向量 q=A<sub>k</sub>x、k=B<sub>k</sub>x，则 q<sub>i</sub>ᵗk<sub>j</sub>=x<sub>i</sub>ᵗA<sub>k</sub>ᵗB<sub>k</sub>x<sub>j</sub>，对应 W<sub>k</sub>=A<sub>k</sub>ᵗB<sub>k</sub>；缩放因子另行加入。老师的 V<sub>k</sub> 则负责 Value 变换。这里的小写 k 是头的编号。</p>
+    <div class="callout callout-exam">
+      <div class="label">常考点</div>
+      面试高频问题："为什么要分成 Q/K/V 三个向量，而不是直接用词向量本身做点积？" 答案：分开之后模型可以学到"我想找什么"（Q）和"我能被怎样找到"（K）是两件不同的事，也让"查找用的向量"和"被加权求和的内容向量"（V）解耦，模型表达能力更强。
+    </div>
+  </section>
+
+  <section id="sec4">
+    <h2><span class="num">4</span>Scaled Dot-Product <span class="badge badge-add">补充</span></h2>
+    <p>老师的幻灯片写的是 softmax(x<sub>i</sub>ᵗx<sub>j</sub>)，<strong>没有写缩放因子</strong>。但原论文的公式其实是：</p>
+    <div class="formula">
+      Attention(Q, K, V) = softmax( Q Kᵗ <strong>/ √d<sub>k</sub></strong> ) V
+    </div>
+    <p>为什么要除以 √d<sub>k</sub>（d<sub>k</sub> 是 Key 向量的维度，比如 64）？</p>
+    <div class="callout callout-add">
+      <div class="label">补充：直觉解释</div>
+      在各分量独立、均值 0、方差 1 的理想化假设下，点积方差为 d<sub>k</sub>，除以 √d<sub>k</sub> 后方差为 1。实际 Q/K 是学出来的，不一定严格满足这些假设；这个推导解释了缩放的动机。如果不缩放，维度一高，点积值就会特别大或特别小，送进 softmax 后会变得"非常尖锐"（几乎只有一个词权重接近 1，其他全接近 0），可能使 softmax 的梯度很小，训练变困难。除以 √d<sub>k</sub> 相当于把点积的数值范围"拉回正常区间"，让 softmax 的输出更平滑，训练更稳定。
+    </div>
+    <div class="callout callout-exam">
+      <div class="label">常考点</div>
+      "Transformer 里为什么要除以 √d_k？" 是非常经典的面试题，一定要能讲清楚"维度越高点积方差越大 → softmax 饱和 → 梯度消失"这个链条。
+    </div>
+  </section>
+
+  <section id="sec5">
+    <h2><span class="num">5</span>Multi-Head Attention <span class="badge badge-teacher">老师讲的</span></h2>
+    <p>老师的类比很好："多个头就像多个不同的卷积滤波器（convolutional filters）"——每个头用自己独立的一套 W<sub>Q</sub>, W<sub>K</sub>, W<sub>V</sub>，分别去关注句子里不同类型的关系。</p>
+    <div class="formula">
+      老师的简化写法（列向量）：<br>head<sub>k</sub>: α<sub>k,i,j</sub> = softmax<sub>j</sub>(x<sub>i</sub>ᵗ W<sub>k</sub> x<sub>j</sub>)&nbsp;&nbsp; x'<sub>k,i</sub> = Σ<sub>j</sub> α<sub>k,i,j</sub> V<sub>k</sub> x<sub>j</sub>
+    </div>
+    <div class="callout callout-analogy">
+      <div class="label">类比</div>
+      一个头可能专门学会"关注前一个词"（语法关系），另一个头可能专门学会"关注指代对象"（比如 "it" 指向哪个名词），还有的头关注"长距离的主谓关系"。多个头并行工作，最后把结果拼接（concat）起来，再过一个线性层融合——相当于多个专家同时看同一句话，各自给出意见，再汇总。
+    </div>
+    <div class="callout callout-add">
+      <div class="label">补充</div>
+      标准多头先用<strong>不同的可学习投影</strong>把整个输入映射到各个头，并非直接切开原始向量。原论文 Base：Encoder 和 Decoder 各 6 层，d<sub>model</sub>=512，h=8，d<sub>k</sub>=d<sub>v</sub>=64；Big：各 6 层，d<sub>model</sub>=1024，h=16，每头仍为 64。老师第 163 页的“1000 维”是近似说法。固定总维度时，多头与一个同总维度的头计算量相近。<div class="formula">head<sub>r</sub> = Attention(XW<sup>Q</sup><sub>r</sub>, XW<sup>K</sup><sub>r</sub>, XW<sup>V</sup><sub>r</sub>)<br>MultiHead(X) = Concat(head<sub>1</sub>, …, head<sub>h</sub>) W<sup>O</sup></div>
+    </div>
+  </section>
+
+  <section id="sec6">
+    <h2><span class="num">6</span>Positional Encoding <span class="badge badge-teacher">老师讲的</span></h2>
+    <p>没有位置编码或其他位置信号、且没有 causal mask 的 Self-Attention 是<strong>置换等变</strong>的：把输入 token 重排，输出也会按同样顺序重排，它无法仅凭内容区分先后关系。因此不能简单说所有输出向量都一样；若再做不含顺序信息的池化，两种排列才会得到相同的汇总结果。</p>
+    <p>老师给的解法：给每个词的 embedding 加上一个"位置编码"（positional embedding），每一维都是不同频率的 sin/cos 波：</p>
+    <div class="formula">
+      PE(pos, 2i)&nbsp; = sin(pos / 10000<sup>2i/d</sup>)<br>
+      PE(pos, 2i+1) = cos(pos / 10000<sup>2i/d</sup>)
+    </div>
+    <p>老师第 161 页的“距离近，点积高”可以当直觉，但<strong>不能当成严格单调规律</strong>。正弦位置编码的点积为 Σ<sub>i</sub> cos((p−q)/10000<sup>2i/d</sup>)，取决于相对距离，却会振荡；更近不保证每次都更大。老师还写了 one-hot 位置编码效果相近；原论文实际比较的是<strong>可学习位置 embedding</strong>与固定 sin/cos，结果接近。one-hot 经可学习矩阵投影可等价于 embedding 查表，不能把原始 one-hot 直接等同于同维 sin/cos。</p>
+    <div class="callout callout-add">
+      <div class="label">补充</div>
+      现代很多模型（比如 GPT-NeoX、LLaMA）已经不用这种"绝对位置的 sin/cos"编码了，而是用 <strong>RoPE（旋转位置编码）</strong> 等"相对位置编码"方法，直接把位置信息编码进 Q/K 的旋转变换里，让注意力打分包含相对位置信息；长文本外推仍取决于训练长度、频率设置与扩展方法，并非自动保证。这个知道名字即可，老师的课没有覆盖到这部分，属于"更新知识"。
+    </div>
+  </section>
+
+  <section id="sec7">
+    <h2><span class="num">7</span>Transformer 完整模块 <span class="badge badge-add">老师有结构图；这里补全说明</span></h2>
+    <p>老师第 161 页左侧<strong>已经画出了 Encoder 的 Attention、FFN 和两次 Add &amp; Norm</strong>；第 162 页补充说明 Encoder/Decoder 都是 Transformer。下面把图中的数据流写清楚。</p>
+    <p>原始 2017 Transformer 的 <strong>Post-LN Encoder Block</strong> 由两个子层组成，每个子层都带有 <strong>残差连接（Residual Connection）</strong> 和 <strong>Layer Normalization</strong>：</p>
+    <div class="stack">
+      <div class="layer">输入 x</div>
+      <div class="layer attn">Multi-Head Self-Attention</div>
+      <div class="layer norm">Add (残差: x + Attention(x)) → LayerNorm</div>
+      <div class="layer ffn">Feed-Forward Network (原版：两层线性 + ReLU)</div>
+      <div class="layer norm">Add (残差) → LayerNorm</div>
+      <div class="layer">输出 → 送进下一层 Encoder Block</div>
+    </div>
+    <div class="formula">
+      z = LayerNorm(x + SelfAttention(x))<br>
+      out = LayerNorm(z + FFN(z))&nbsp;&nbsp;&nbsp; <span class="comment">// FFN(z) = max(0, zW₁+b₁)W₂+b₂；省略 dropout</span>
+    </div>
+    <div class="callout callout-add"><div class="label">原版与常见变体</div>上图是 Post-LN：先残差相加，再归一化。常见 Pre-LN 则是 z=x+Attention(LN(x))，out=z+FFN(LN(z))；有些模型使用 RMSNorm、GELU 或门控 FFN。不能把原版 Block 当作所有 LLM 的精确结构。</div>
+    <div class="callout callout-analogy">
+      <div class="label">为什么要残差连接？</div>
+      Transformer 一般要叠 6~24 层甚至上百层，网络太深，梯度传到前面会消失/爆炸。残差连接的意思是"输出 = 这一层学到的修正量 + 原始输入本身"，相当于给梯度开了一条"高速公路"，可以直接跳过这一层传回去，训练深层网络就稳定多了。这跟 ResNet 的残差思想完全一样。
+    </div>
+    <div class="callout callout-analogy">
+      <div class="label">为什么要 LayerNorm？</div>
+      对每个 token 的隐藏维度计算均值与方差，再做归一化及可学习的缩放 γ、偏移 β：LN(x)=γ⊙(x−μ)/√(σ²+ε)+β。<strong>最终输出不保证均值 0、方差 1</strong>。LayerNorm 不依赖 batch 统计量，适合序列建模；BatchNorm 通常沿 batch 及相关空间维度统计每个通道。
+    </div>
+    <div class="callout callout-add">
+      <div class="label">补充</div>
+      Feed-Forward 子层（FFN）容易被忽略，但在原版 Encoder Block 中，若 d<sub>ff</sub>=4d，则 FFN 权重约 8d²、Attention 投影约 4d²，FFN 约占该 Block 权重的 2/3（忽略偏置和归一化；整个模型的比例还受 embedding 等影响）。它对每个位置独立地做"升维再降维"的非线性变换（比如 512 → 2048 → 512），可以理解为：Attention 负责"词与词之间交换信息"，FFN 负责"每个词自己消化、加工刚拿到的信息"。同一层 FFN 的参数在不同 token 位置之间共享。
+    </div>
+  </section>
+
+  <section id="sec8">
+    <h2><span class="num">8</span>Decoder：Masked Self-Attention + Cross-Attention <span class="badge badge-add">补充</span></h2>
+    <p>老师说了一句很重要的话："Decoder 消费之前生成的 token（并且会 attend 输入），但没有循环状态（recurrent state）"——这句话里藏了两个机制，老师没有展开讲清楚，这里补全：</p>
+    <div class="stack">
+      <div class="layer">目标 token embedding + 位置编码<br>训练：正确目标右移；推理：已生成的前缀</div>
+      <div class="layer mask">Masked Multi-Head Self-Attention <span style="font-size:0.75rem">(只能看自己和前面的词)</span></div>
+      <div class="layer norm">Add & LayerNorm</div>
+      <div class="layer cross">Cross-Attention <span style="font-size:0.75rem">(Query 来自 Decoder，Key/Value 来自 Encoder 输出)</span></div>
+      <div class="layer norm">Add & LayerNorm</div>
+      <div class="layer ffn">Feed-Forward Network</div>
+      <div class="layer norm">Add & LayerNorm</div>
+      <div class="layer">上述三个子层组成一个 Decoder Block，重复 N 层<br>最后 → Linear（映射到词表）→ softmax → 下一个 token</div>
+    </div>
+    <p class="figure-caption">这是 Encoder–Decoder 架构的 Decoder。<strong>GPT 的 Decoder-only Block 通常没有这里的 Cross-Attention 子层</strong>；它用同一条因果序列处理提示和输出。图中每次 Add 的旁路来自该子层输入，LayerNorm 是原版 Post-LN 顺序。</p>
+    <h3>① Masked（Causal）Self-Attention</h3>
+    <p>训练时，Decoder 的输入张量包含<strong>右移后的目标序列</strong>（比如输入 &lt;BOS&gt;, le, film, était, bon），但如果不做限制，预测 le 的位置就能读到后面的 le 本身及其他目标词——这是作弊。解决办法：在算 softmax 之前，把"未来位置"的分数强行设成 <strong>-∞</strong>，softmax 后它们的权重就变成 0。</p>
+    <div class="formula">
+      score<sub>i,j</sub> = (QKᵗ/√d<sub>k</sub>)<sub>i,j</sub>&nbsp;&nbsp; if j ≤ i, else <strong>-∞</strong>
+    </div>
+    <div class="callout callout-analogy">
+      <div class="label">类比</div>
+      就像考试的时候用一张纸把答题卡后面的题目全部盖住，你写第 3 题的时候，物理上根本看不到第 4 题写了什么——这对齐了训练和推理的可见位置范围；训练前缀来自正确答案，推理前缀来自模型生成，两者仍有分布差异（exposure bias）。
+    </div>
+    <h3>② Cross-Attention（编码器-解码器注意力）</h3>
+    <p>这才是真正对应老师在第 1 节讲的 Bahdanau/Luong Attention！在 Decoder 的每一层，还有一个 attention 子层：<strong>Query 来自 Decoder 自己当前的状态，但 Key 和 Value 来自 Encoder 最后一层的输出</strong>。这正是"解码器在生成每个词时，回头去看输入句子里相关的部分"——跟老师第 1 节讲的 RNN Attention 是同一个思想，只是从 RNN 搬到了 Transformer 里，公式形式统一成了 Q/K/V。</p>
+    <table>
+      <tr><th>子层</th><th>Query 来自</th><th>Key/Value 来自</th><th>作用</th></tr>
+      <tr><td>Encoder Self-Attention</td><td>输入句子自己</td><td>输入句子自己</td><td>理解输入句子内部关系</td></tr>
+      <tr><td>Decoder Masked Self-Attention</td><td>目标前缀的本层表示</td><td>目标前缀（允许当前位置及之前；输入已右移）</td><td>理解目标前缀；训练时前缀来自正确答案</td></tr>
+      <tr><td>Decoder Cross-Attention</td><td>Decoder 当前状态</td><td><strong>Encoder 的输出</strong></td><td>决定该看输入句子的哪部分（对应老师第1节讲的 Attention）</td></tr>
+    </table>
+  </section>
+
+  <section id="sec9">
+    <h2><span class="num">9</span>训练 vs 推理：Teacher Forcing <span class="badge badge-teacher">老师讲的（在 RNN 部分）</span></h2>
+    <p>这部分老师是在 RNN encoder-decoder 那一节讲的，但对 Transformer 的 Decoder 同样适用：</p>
+    <ul>
+      <li><strong>训练时</strong>：不管模型自己预测对不对，都把"正确答案"的前一个词喂给模型去预测下一个词（这叫 Teacher Forcing），对 Transformer，配合 causal mask 可并行计算各位置 loss；<strong>RNN 即使用 Teacher Forcing，隐藏状态仍需沿序列递推</strong>。</li>
+      <li><strong>推理时</strong>：没有正确答案可以喂，只能把模型自己刚生成的词当作下一步的输入，一步一步（autoregressive）往后生成，直到生成结束 token（老师记作 <code>[STOP]</code>，常记作 EOS）或达到长度限制。</li>
+    </ul>
+    <div class="table-scroll"><table><caption>右移输入示意：每一列用输入前缀预测该列标签</caption><tr><th>位置</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td></tr><tr><th>Decoder 输入</th><td>&lt;BOS&gt;</td><td>le</td><td>film</td><td>était</td><td>bon</td></tr><tr><th>预测标签</th><td>le</td><td>film</td><td>était</td><td>bon</td><td>&lt;EOS&gt;</td></tr></table></div>
+    <div class="formula">
+      训练目标: max Σ<sub>(x,y)</sub> Σ<sub>i</sub> log P(y*<sub>i</sub> | x, y*<sub>1</sub>, ..., y*<sub>i-1</sub>)
+    </div>
+    <div class="callout callout-exam">
+      <div class="label">常考点</div>
+      "为什么 Transformer 训练可以并行，推理却不能？" 答案：训练时因为用 Teacher Forcing + Masked Attention，整句目标句子的所有位置可以同时算（只是被 mask 限制了信息流向），一次前向传播出所有位置的 loss；但推理时第 i 个词到底是什么要等模型真正生成出来才知道，所以必须一步一步串行生成。
+    </div>
+  </section>
+
+  <section id="sec10">
+    <h2><span class="num">10</span>Tokenization：BPE / WordPiece <span class="badge badge-add">补充算法（老师提到 WordPiece）</span></h2>
+    <p>老师第 185 页明确写了 BERT 使用约 30k WordPiece token，但没有展开分词算法。Transformer 的输入单位是 <strong>token</strong>；BERT/GPT 常用子词或字节级分词，一个 token 可以是完整单词、词的一部分、标点或空白片段。架构本身并不规定必须用某一种分词方式。</p>
+    <div class="callout callout-add">
+      <div class="label">为什么不直接按单词切？</div>
+      如果按整个单词建词表，词表会非常大（英语单词几十万个，还有拼写错误、新词、不同语言），未登录词通常只能映射为 [UNK]，会丢失其身份信息。子词能组合出许多未见过的单词；字符词表覆盖不足时仍可能出现 [UNK]，覆盖全部字节的分词方案可避免这一类词表覆盖问题。
+    </div>
+    <p>两种最常见的子词算法：</p>
+    <ul>
+      <li><strong>BPE（Byte Pair Encoding，字节对编码）</strong>：GPT 系列用的方法。字符级 BPE 先从字符单元开始；GPT-2 使用的字节级 BPE 则从字节单元开始，然后统计语料里出现频率最高的"相邻 token 对"，把它们合并成一个新 token，重复这个过程直到词表达到目标大小。常见的词（the, movie）会变成一个完整 token，罕见词会被拆成几个子词片段（示意 "unhappiness" → "un" + "happi" + "ness"；实际切法取决于具体 tokenizer）。</li>
+      <li><strong>WordPiece</strong>：BERT 用的方法，思路跟 BPE 类似（也是逐步合并），通常用词表语言模型的似然来解释其训练思想，不应把它等同于 Transformer 语言模型的似然。原始 BERT 公开了 tokenizer 与词表，但未公开完整词表训练实现；教学中常用 freq(ab)/(freq(a)freq(b)) 来示意合并评分，它不是可确认的 BERT 原始训练规则。BERT 的输入里你能看到像 <code>##ing</code> 这种片段，<code>##</code> 表示"这是接在前一个片段后面的子词，不是一个独立单词的开头"。</li>
+    </ul>
+    <div class="callout callout-exam">
+      <div class="label">常考点</div>
+      "为什么 LLM 的输入是 token 而不是单词？" + "子词分词解决了什么问题？"（词表大小可控 + 能处理没见过的词/拼写变体）是基础但高频的面试题。
+    </div>
+  </section>
+
+  <section id="sec11">
+    <h2><span class="num">11</span>Transformer 家族：BERT / GPT / T5 <span class="badge badge-teacher">老师讲的</span></h2>
+    <p>Transformer 架构定下来之后（2017），接下来几年的大模型本质上是在"怎么用这套架构 + 怎么预训练"上做文章。</p>
+    <h3>BERT（2018，Google）— Encoder-only</h3>
+    <ul>
+      <li>老师强调的关键区别：<strong>ELMo 使用前向和后向两个单向 LSTM 语言模型</strong>，组合两个方向的表示，因此整体是 bidirectional LM；但两个方向在各自深层中分开建模。GPT 是从左到右的单向模型，而 <strong>BERT 是真正双向的</strong>——用 Transformer Encoder（没有 causal mask），每个位置可同时利用两侧的可见上下文（MLM 输入含替换或掩码）。</li>
+      <li>双向带来一个问题：不能再用标准的"预测下一个词"当训练目标了（因为模型已经能看到答案），所以 BERT 用 <strong>Masked Language Modeling（MLM）</strong>：随机选出 <strong>15% 的 WordPiece token 位置作为预测目标</strong>；其中 80% 换成 <code>[MASK]</code>、10% 换成随机 token、10% 保持原样。Loss 只在选中的位置计算；实际换成 [MASK] 的比例约为全体 token 的 12%。老师第 183 页已明确给出这个规则。</li>
+      <li>第二个训练目标：<strong>Next Sentence Prediction（NSP）</strong>，判断两句话是不是原文里相邻的句子。（RoBERTa 在其训练设置下移除了 NSP，并取得更好的结果；不宜推广成所有任务中 NSP 都无用。）</li>
+      <li>BERT Base：12 层，768 维，12 个头，110M 参数；BERT Large：24 层，1024 维，16 个头，340M 参数。BERT 使用可学习的绝对位置 embedding，并加上 segment embedding，不能直接套用上节原版 sin/cos。</li>
+      <li>用法：在 BERT 后面接一个小的分类头，<strong>微调（fine-tune）整个网络</strong>（老师强调：微调整个网络效果通常比只调最后一层好，这跟 ELMo 的用法不一样）。</li>
+    </ul>
+    <h3>GPT / GPT-2 / GPT-3（OpenAI）— Decoder-only</h3>
+    <ul>
+      <li>老师第 194 页用“ELMo with transformers”作类比。更准确地说，GPT 是单向 Transformer 语言模型——本质上还是从左到右预测下一个词的语言模型（causal LM），只是把 LSTM 换成了 Transformer Decoder（用上了 Masked Self-Attention）。</li>
+      <li>GPT-2：在 40GB 文本上训练；GPT-3：参数量从 GPT-2 的量级跳到 1750 亿（175B），同时期 T5 到了 110 亿参数。</li>
+      <li>训练一个这种规模的模型非常贵：老师第 198 页转引的<strong>历史单次预训练成本估计</strong>（约 2019 年；非当前报价）——BERT Base 约 $500，BERT Large 约 $7000，XLNet（BERT 变体）$30,000~$60,000。</li>
+    </ul>
+    <div class="callout callout-add">
+      <div class="label">补充：三种架构的分类，面试必会</div>
+      <table style="margin-top:8px">
+        <tr><th>架构</th><th>代表模型</th><th>能不能看到未来</th><th>典型用途</th></tr>
+        <tr><td><strong>Encoder-only</strong></td><td>BERT, RoBERTa</td><td>双向，能看到整句</td><td>分类、NER、句子理解类任务</td></tr>
+        <tr><td><strong>Decoder-only</strong></td><td>GPT-1/2/3, LLaMA</td><td>单向，只能看过去（causal mask）</td><td>文本生成、对话、现代大部分 LLM</td></tr>
+        <tr><td><strong>Encoder-Decoder</strong></td><td>原始 Transformer, T5, BART</td><td>Encoder 双向 + Decoder 单向 + Cross-Attention</td><td>翻译、摘要等"输入→输出"任务</td></tr>
+      </table>
+    </div>
+    <h3>T5（2019/2020，Google）— Encoder–Decoder <span class="badge badge-add">补充训练目标</span></h3>
+    <p>老师第 203 页列出了 T5 的 11B 规模。T5 将任务统一为 text-to-text；代表性预训练目标是 span corruption：把输入中连续片段替换为 sentinel token，Decoder 自回归生成被删去的片段及对应 sentinel，而不是逐位置做 BERT 式 MLM。</p>
+    <div class="callout callout-add"><div class="label">拓展：预训练与后训练</div>预训练先学语言或去噪任务；指令微调再学按要求回答，偏好训练可用 RLHF 等方法。RLHF 在 ChatGPT 之前已有研究与应用，不是从 GPT-3.5 才开始。Scaling law 描述特定实验范围内 loss 与模型、数据、算力的经验关系，不意味着只增参数就一定更好。对于未公开结构细节的商业模型，不凭品牌名称断言其精确 Block 或位置编码。</div>
+  </section>
+
+  <section id="sec12">
+    <h2><span class="num">12</span>一页总结 + 面试高频问题</h2>
+    <div class="summary-grid">
+      <div class="summary-card"><h4>核心一句话</h4><p>Transformer = 用 Self-Attention（配合 Q/K/V、多头、缩放）替代 RNN 的循环结构，再加残差连接、LayerNorm、Feed-Forward 子层堆叠成的架构，天生支持并行计算、擅长长距离依赖。</p></div>
+      <div class="summary-card"><h4>为什么能替代 RNN</h4><p>RNN 必须一步步串行传递隐藏状态；Self-Attention 任意两个词的"距离"都是 1 步，各位置都依赖本层同一份输入，可同时计算，减少序列递推瓶颈；Attention 打分和聚合通常为 O(n²d)，长序列仍有计算成本。</p></div>
+      <div class="summary-card"><h4>Encoder vs Decoder 关键区别</h4><p>Encoder 通常无 causal mask，可双向关注（仍可有 padding mask）；Encoder–Decoder 中的 Decoder 用 causal Self-Attention 加 Cross-Attention。GPT 的 Decoder-only 通常没有 Cross-Attention。</p></div>
+      <div class="summary-card"><h4>BERT vs GPT 关键区别</h4><p>BERT = Encoder-only + Masked LM，双向，适合理解类任务；GPT = Decoder-only + 标准从左到右语言模型，适合生成类任务。</p></div>
+    </div>
+
+    <h3>面试/考试高频问题自测（答案都在前面章节）</h3>
+    <ol>
+      <li>Self-Attention 的 Q/K/V 分别是干什么的？</li>
+      <li>为什么 Attention 公式要除以 √d_k？</li>
+      <li>Multi-Head Attention 为什么要用多个头，而不是一个更大的头？</li>
+      <li>Positional Encoding 解决了什么问题？为什么需要它？</li>
+      <li>Transformer 里残差连接和 LayerNorm 各自的作用是什么？</li>
+      <li>Decoder 里的 Masked Self-Attention 和 Cross-Attention 有什么区别？</li>
+      <li>为什么训练可以并行，推理却必须一步步生成？</li>
+      <li>BERT、GPT、T5 分别属于什么架构（encoder-only / decoder-only / encoder-decoder）？训练目标分别是什么？</li>
+      <li>BPE 和 WordPiece 解决了什么问题？</li>
+    </ol>
+  </section>
+
+  <section id="sources"><h2>核对来源与原课件页码</h2><p>页码按 PDF 阅读器从 1 开始计数：RNN 痛点第 114 页；Attention 第 137–145 页；Self-Attention/多头第 151–160 页；Encoder 图及位置编码第 161 页；Decoder 第 162 页；模型规模第 163 页；ELMo/BERT 第 180–188 页；GPT 第 194 页；历史成本第 198 页；T5/GPT-3 第 203 页。</p><ul>
+<li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. — Attention Is All You Need</a>（§3：结构、Q/K/V、缩放、位置编码；模型配置）。</li>
+<li><a href="https://aclanthology.org/N19-1423/">Devlin et al. — BERT</a>（MLM、NSP、架构与可学习位置 embedding）。</li>
+<li><a href="https://aclanthology.org/N18-1202/">Peters et al. — ELMo</a>（两个方向独立建模的 biLM）。</li>
+<li><a href="https://huggingface.co/learn/llm-course/en/chapter6/6">Hugging Face — WordPiece</a>（公开训练实现的限制与教学评分）。</li>
+<li><a href="https://arxiv.org/abs/1910.10683">Raffel et al. — T5</a>（text-to-text 与 span corruption）。</li>
+</ul></section>
+  <footer>
+    基于 Alan Ritter · CS4641 · Neural Networks for Text 讲义整理与补充 · 补充内容来自 Vaswani et al. (2017) "Attention Is All You Need" 及后续通用知识
+  </footer>
+</div>
+
+</div><div id="guide-en" lang="en" hidden><div class="wrap"><header><h1>Transformer Study Guide</h1><p>A plain-language guide based on Alan Ritter's CS4641 Neural Networks for Text lectures, with checked formulas and clearly identified additions.</p><div class="source-note">Source: nn_text.pdf. PDF page numbers count from 1. The English version follows the same 13 topics and corrections as the Chinese version; wording is adapted for readability.</div></header><div class="callout callout-warn"><div class="label">Reviewed · 2026-10-06</div>Checked against the original lecture and papers. Diagrams are teaching illustrations rather than original slide images or measured model outputs.</div><nav class="toc"><h2>Contents</h2><ol><li><a href="#en-sec0">Why Transformer? The limitations of RNNs</a></li><li><a href="#en-sec1">Attention: retrieve information when needed</a></li><li><a href="#en-sec2">Self-Attention: positions attend within one sequence</a></li><li><a href="#en-sec3">Query, Key, and Value</a></li><li><a href="#en-sec4">Scaled dot-product attention: why divide by √d?</a></li><li><a href="#en-sec5">Multi-Head Attention</a></li><li><a href="#en-sec6">Positional Encoding</a></li><li><a href="#en-sec7">Inside a Transformer Encoder Block</a></li><li><a href="#en-sec8">Decoder: Causal Self-Attention and Cross-Attention</a></li><li><a href="#en-sec9">Training versus inference: Teacher Forcing</a></li><li><a href="#en-sec10">Tokenization: BPE and WordPiece</a></li><li><a href="#en-sec11">Transformer families: BERT, GPT, and T5</a></li><li><a href="#en-sec12">Summary and interview self-check</a></li></ol></nav><section id="en-sec0"><h2><span class="num">0</span>Why Transformer? The limitations of RNNs</h2><p>Before Transformer, a common translation system used an RNN/LSTM encoder to read the source sequence into a fixed-size representation, and a decoder to generate the translation. Long sequences place pressure on that representation and on the LSTM's ability to retain information over many steps.</p><p>Ritter's PDF page 114 emphasizes these two long-sequence problems. A separate architectural limitation is sequential computation: an RNN state depends on the previous state, so positions within one sequence cannot all be computed at once. Different examples can still be batched.</p><div class="callout callout-analogy"><div class="label">Analogy</div>Imagine listening to an entire lecture, retaining only a short summary, and answering every later question from that summary.</div><p>Attention relaxes the information bottleneck: each decoding step can access all encoder states and form a weighted combination instead of relying only on a final summary vector.</p></section><section id="en-sec1"><h2><span class="num">1</span>Attention: retrieve information when needed</h2><p>For decoder position i, score every encoder position j, normalize the scores over j, and combine the encoder states.</p><div class="formula">e<sub>ij</sub> = f(h̄<sub>i</sub>, h<sub>j</sub>)<br>α<sub>ij</sub> = softmax<sub>j</sub>(e<sub>ij</sub>)<br>c<sub>i</sub> = Σ<sub>j</sub> α<sub>ij</sub> h<sub>j</sub></div><p>Here h̄ is a decoder state, h is an encoder state, e is a scalar compatibility score, α is a nonnegative weight, and c is a context vector. The weights over valid positions sum to one.</p><table><tr><th>Scoring method</th><th>Formula</th></tr><tr><td>Additive — Bahdanau et al. (2014)</td><td>v<sub>a</sub>ᵗ tanh(W<sub>a</sub>[h̄<sub>i</sub>; h<sub>j</sub>] + b<sub>a</sub>)</td></tr><tr><td>Dot product — Luong et al. (2015)</td><td>h̄<sub>i</sub>ᵗ h<sub>j</sub></td></tr><tr><td>Bilinear — Luong et al. (2015)</td><td>h̄<sub>i</sub>ᵗ W h<sub>j</sub></td></tr></table><p>The lecture's additive formula is abbreviated: after tanh, a projection is needed to obtain a scalar. Encoder states carry source information; decoder states help select what to attend to.</p><div class="callout callout-analogy"><div class="label">Analogy</div>In an open-book exam, each question guides you toward relevant pages rather than requiring one memorized summary of the whole book.</div></section><section id="en-sec2"><h2><span class="num">2</span>Self-Attention: positions attend within one sequence</h2><p>In self-attention, queries, keys, and values originate from the same sequence. In the bidirectional example here, each position can attend to every position, including itself, to form a contextual representation.</p><div class="formula">α<sub>i,j</sub> = softmax<sub>j</sub>(x<sub>i</sub>ᵗx<sub>j</sub>)<br>x′<sub>i</sub> = Σ<sub>j</sub> α<sub>i,j</sub> x<sub>j</sub></div><p>This is the lecture's simplified version: Q=K=V=X, with projections and scaling omitted.</p><div class="diagram"><svg viewBox="0 0 640 255" role="img" aria-labelledby="en-attn-title en-attn-desc" xmlns="http://www.w3.org/2000/svg"><title id="en-attn-title">Attention from great to four positions</title><desc id="en-attn-desc">All four inputs contribute, including great itself. Weights are illustrative, not measured.</desc><defs><marker id="en-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="var(--accent)"/></marker></defs><g font-family="var(--font-body)" text-anchor="middle" fill="var(--text)"><text x="320" y="23" font-size="14">Query：great → Score all positions → softmax weights</text><rect x="20" y="47" width="120" height="48" rx="8" fill="var(--accent-light)" stroke="var(--accent)"/><text x="80" y="67" font-size="14">the</text><text x="80" y="86" font-size="12">α = 0.1</text><path d="M80 95 L80 123 L320 169" stroke="var(--accent)" fill="none" marker-end="url(#en-arrow)"/><text x="80" y="118" font-size="11">0.1 × x_the</text><rect x="180" y="47" width="120" height="48" rx="8" fill="var(--accent-light)" stroke="var(--accent)"/><text x="240" y="67" font-size="14">movie</text><text x="240" y="86" font-size="12">α = 0.5</text><path d="M240 95 L240 123 L320 169" stroke="var(--accent)" fill="none" marker-end="url(#en-arrow)"/><text x="240" y="118" font-size="11">0.5 × x_movie</text><rect x="340" y="47" width="120" height="48" rx="8" fill="var(--accent-light)" stroke="var(--accent)"/><text x="400" y="67" font-size="14">was</text><text x="400" y="86" font-size="12">α = 0.1</text><path d="M400 95 L400 123 L320 169" stroke="var(--accent)" fill="none" marker-end="url(#en-arrow)"/><text x="400" y="118" font-size="11">0.1 × x_was</text><rect x="500" y="47" width="120" height="48" rx="8" fill="var(--accent-light)" stroke="var(--accent)"/><text x="560" y="67" font-size="14">great</text><text x="560" y="86" font-size="12">α = 0.3</text><path d="M560 95 L560 123 L320 169" stroke="var(--accent)" fill="none" marker-end="url(#en-arrow)"/><text x="560" y="118" font-size="11">0.3 × x_great</text><rect x="218" y="172" width="204" height="38" rx="8" fill="var(--green-bg)" stroke="var(--green-border)"/><text x="320" y="197" font-size="14">Sum → x′_great</text><text x="320" y="237" font-size="12">All four contribute；0.1 + 0.5 + 0.1 + 0.3 = 1</text></g></svg><p class="figure-caption">Redrawn from lecture page 156. These weights are illustrative, not model measurements or fixed linguistic relationships. In standard Transformer, the weighted contents are projected Values.</p></div><p>Any two permitted positions have a direct information path through one attention layer. An RNN passes information through intermediate states, while a local CNN needs enough layers to connect distant positions.</p><p>All outputs in one attention layer use the already available input to that layer, so positions can be computed simultaneously. They are not statistically independent. Dense attention scoring and aggregation typically cost O(n²d); actual speed depends on sequence length, hardware, and implementation.</p></section><section id="en-sec3"><h2><span class="num">3</span>Query, Key, and Value</h2><div class="qkv-grid"><div class="qkv-card q"><div class="letter">Q</div><div class="desc">Query: what information am I looking for?</div></div><div class="qkv-card k"><div class="letter">K</div><div class="desc">Key: how should others match against me?</div></div><div class="qkv-card v"><div class="letter">V</div><div class="desc">Value: what information do I contribute?</div></div></div><p>Like a library search, the query is the search request, keys are searchable labels, and values are the contents returned as a weighted mixture. Attention weights are learned compatibility signals, not necessarily human-interpretable semantic similarity.</p><div class="formula">Q=XW<sub>Q</sub>, K=XW<sub>K</sub>, V=XW<sub>V</sub><br>Attention(Q,K,V)=softmax(QKᵗ/√d<sub>k</sub>)V</div><p>X contains one token representation per row. In deeper layers these are contextual hidden states, not simply the original word embeddings. The projection matrices are learned; softmax is applied across key positions.</p><div class="callout callout-warn"><div class="label">Notation correction</div>The lecture's W<sub>k</sub> is the bilinear scoring matrix for head k, not the standard Key projection W<sub>K</sub>. With column-vector projections q=A<sub>k</sub>x and k=B<sub>k</sub>x, q<sub>i</sub>ᵗk<sub>j</sub>=x<sub>i</sub>ᵗA<sub>k</sub>ᵗB<sub>k</sub>x<sub>j</sub>. Thus the lecture's matrix summarizes both projections; scaling is added separately. Its V<sub>k</sub> transforms the values.</div><p>Separating Q/K/V lets the model learn different representations for requesting information, being matched, and providing content.</p></section><section id="en-sec4"><h2><span class="num">4</span>Scaled dot-product attention: why divide by √d?</h2><p>The lecture's simplified score omits the scaling factor. In standard scaled dot-product attention, d<sub>k</sub> is the query/key dimension of one head.</p><div class="formula">Attention(Q,K,V)=softmax(QKᵗ / √d<sub>k</sub>)V</div><p>Under the idealized assumption that query and key components are independent, have mean zero, and have variance one, their dot product has variance d<sub>k</sub>. Dividing by √d<sub>k</sub> makes that variance one.</p><p>Large score differences can produce a highly concentrated softmax distribution with very small gradients. Scaling reduces this tendency. Learned Q/K need not satisfy the assumptions exactly; the calculation explains the motivation rather than guaranteeing a particular distribution.</p><div class="callout callout-exam"><div class="label">Interview checkpoint</div>Explain the chain: higher dimension → larger dot-product variance under the assumptions → possible softmax saturation → smaller gradients.</div></section><section id="en-sec5"><h2><span class="num">5</span>Multi-Head Attention</h2><p>Ritter compares multiple heads to different convolution filters. Heads use different learned projections and can capture different relationships or representation subspaces. A head might attend to nearby words or a distant referent, but these roles are not prescribed or guaranteed.</p><div class="formula">Lecture notation (column vectors):<br>α<sub>k,i,j</sub>=softmax<sub>j</sub>(x<sub>i</sub>ᵗW<sub>k</sub>x<sub>j</sub>)<br>x′<sub>k,i</sub>=Σ<sub>j</sub> α<sub>k,i,j</sub>V<sub>k</sub>x<sub>j</sub><br><br>Standard notation (rows in X):<br>head<sub>r</sub>=Attention(XW<sup>Q</sup><sub>r</sub>, XW<sup>K</sup><sub>r</sub>, XW<sup>V</sup><sub>r</sub>)<br>MultiHead(X)=Concat(head<sub>1</sub>, …, head<sub>h</sub>)W<sup>O</sup></div><p>Each head projects the entire input into its own space; it does not simply receive a fixed slice of the original embedding. Head outputs are concatenated and passed through an output projection.</p><table><tr><th>Original model</th><th>Encoder / Decoder depth</th><th>d<sub>model</sub></th><th>Heads</th><th>Per-head d<sub>k</sub>=d<sub>v</sub></th></tr><tr><td>Base</td><td>6 / 6</td><td>512</td><td>8</td><td>64</td></tr><tr><td>Big</td><td>6 / 6</td><td>1024</td><td>16</td><td>64</td></tr></table><p>The lecture's “1000 dimensions” on page 163 is approximate. At fixed total width, the original multi-head scheme has computation comparable to one full-width head.</p></section><section id="en-sec6"><h2><span class="num">6</span>Positional Encoding</h2><p>Without positional signals or a causal mask, self-attention is permutation equivariant: reordering input tokens reorders the outputs correspondingly. It cannot distinguish token order from content alone. The output vectors are not all identical; order-insensitive pooling would produce the same pooled result for permutations.</p><p>The original Transformer adds same-width sinusoidal encodings to token embeddings:</p><div class="formula">PE(pos,2i)=sin(pos/10000<sup>2i/d</sup>)<br>PE(pos,2i+1)=cos(pos/10000<sup>2i/d</sup>)</div><p>Here d is d<sub>model</sub>. Across paired sine/cosine dimensions:</p><div class="formula">PE(p)ᵗPE(q)=Σ<sub>i</sub> cos((p−q)/10000<sup>2i/d</sup>)</div><div class="callout callout-warn"><div class="label">Correct the simplified intuition</div>This depends on relative distance but oscillates. A smaller distance does not guarantee a larger dot product in every comparison. The original paper compared fixed sin/cos encodings with learned positional embeddings, not raw one-hot vectors. A learned projection of one-hot positions can implement an embedding lookup.</div><p>RoPE rotates Q/K using position-dependent angles so their attention scores reflect relative position. Longer-context extrapolation still depends on training lengths, frequency choices, and extension methods; it is not automatic.</p></section><section id="en-sec7"><h2><span class="num">7</span>Inside a Transformer Encoder Block</h2><p>The lecture already includes an Encoder diagram on PDF page 161, with Attention, FFN, and two Add &amp; Norm operations. The original guide's claim that no internal structure was shown was incorrect.</p><p>The original 2017 Transformer uses a Post-LN block:</p><div class="stack"><div class="layer">Input x</div><div class="layer attn">Multi-Head Self-Attention</div><div class="layer norm">Add sublayer input → LayerNorm</div><div class="layer ffn">Position-wise FFN: Linear → ReLU → Linear</div><div class="layer norm">Add sublayer input → LayerNorm</div><div class="layer">Output → next Encoder Block</div></div><div class="formula">z=LayerNorm(x+SelfAttention(x))<br>out=LayerNorm(z+FFN(z))<br>FFN(z)=max(0,zW₁+b₁)W₂+b₂<br><span class="comment">Dropout omitted for clarity.</span></div><p>Residual connections provide a direct path around each sublayer and help optimize deep networks. Each residual adds that sublayer's own input, not always the original input to the entire block.</p><p>LayerNorm computes statistics over a token's hidden dimensions, then applies learned scale γ and offset β:</p><div class="formula">LN(x)=γ⊙(x−μ)/√(σ²+ε)+β</div><p>The final output is not guaranteed to have mean zero and variance one. Unlike BatchNorm, LayerNorm does not depend on batch statistics.</p><p>The FFN acts independently at each position, with weights shared across positions within a layer. For the original Encoder Block with d<sub>ff</sub>=4d, FFN weights total about 8d² and attention projections about 4d². Thus the FFN accounts for about two-thirds of block weights, ignoring biases and normalization; the whole-model share also depends on embeddings.</p><div class="callout callout-add"><div class="label">Common variants</div>Pre-LN instead computes z=x+Attention(LN(x)), then out=z+FFN(LN(z)). Other models may use RMSNorm, GELU, or gated FFNs. The original diagram is not an exact specification for every LLM.</div></section><section id="en-sec8"><h2><span class="num">8</span>Decoder: Causal Self-Attention and Cross-Attention</h2><p>Ritter notes that the decoder consumes previously generated tokens and attends to the input, without an RNN-style recurrent state. The following flow describes the original Encoder–Decoder architecture:</p><div class="stack"><div class="layer">Token embedding + position encoding<br>Training: shifted targets; inference: generated prefix</div><div class="layer mask">Masked Multi-Head Self-Attention<br>Current and earlier input positions only</div><div class="layer norm">Add &amp; LayerNorm</div><div class="layer cross">Cross-Attention<br>Q: Decoder; K/V: Encoder output</div><div class="layer norm">Add &amp; LayerNorm</div><div class="layer ffn">Feed-Forward Network</div><div class="layer norm">Add &amp; LayerNorm</div><div class="layer">Repeat these three sublayers for N Blocks<br>Then Linear to vocabulary → softmax → next token</div></div><p class="figure-caption">Each Add uses its sublayer's input as the residual. The normalization order is Post-LN. A GPT-style Decoder-only block normally has no Encoder Cross-Attention sublayer.</p><h3>Causal Self-Attention</h3><p>Training supplies shifted target tokens. Without a mask, an output position could read its target from a later input position. Set forbidden attention scores to −∞ before softmax so their weights become zero:</p><div class="formula">score<sub>i,j</sub>=(QKᵗ/√d<sub>k</sub>)<sub>i,j</sub> if j≤i; otherwise −∞</div><p>The current input position is allowed because the targets have been shifted. This aligns which positions are visible during training and inference. Their prefixes still differ: ground truth in training versus model-generated tokens at inference, creating exposure bias.</p><h3>Cross-Attention</h3><p>Queries come from the current decoder representations after the masked sublayer. Keys and values are projections of the final Encoder output. This implements the same source-retrieval idea as RNN encoder–decoder attention using the Transformer Q/K/V formulation.</p><table><tr><th>Sublayer</th><th>Q source</th><th>K/V source</th></tr><tr><td>Encoder Self-Attention</td><td>Encoder layer input</td><td>Same input sequence</td></tr><tr><td>Decoder Causal Self-Attention</td><td>Target-prefix layer input</td><td>Same prefix; only allowed positions</td></tr><tr><td>Decoder Cross-Attention</td><td>Decoder representations</td><td>Final Encoder output</td></tr></table></section><section id="en-sec9"><h2><span class="num">9</span>Training versus inference: Teacher Forcing</h2><p>The lecture describes feeding correct previous tokens when training an RNN decoder. The same Teacher Forcing principle applies to Transformer decoders.</p><ul><li><strong>Training:</strong> use the ground-truth prefix to predict the next target. In a Transformer, shifted targets and a causal mask allow all target losses to be computed in parallel. An RNN still has sequential hidden-state dependencies even with Teacher Forcing.</li><li><strong>Inference:</strong> use the generated prefix. Ordinary autoregressive generation proceeds token by token until EOS (called [STOP] in the lecture) or a length limit.</li></ul><div class="table-scroll"><table><caption>Each column predicts its label from the input prefix</caption><tr><th>Position</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td></tr><tr><th>Decoder input</th><td>&lt;BOS&gt;</td><td>le</td><td>film</td><td>était</td><td>bon</td></tr><tr><th>Target label</th><td>le</td><td>film</td><td>était</td><td>bon</td><td>&lt;EOS&gt;</td></tr></table></div><div class="formula">maximize Σ<sub>(x,y)</sub> Σ<sub>i</sub> log P(y*<sub>i</sub> | x, y*<sub>1</sub>, …, y*<sub>i−1</sub>)</div><div class="callout callout-exam"><div class="label">Interview checkpoint</div>During training the target prefixes are already known. During ordinary autoregressive inference, the next prefix depends on the token just generated. This is why parallel training does not imply parallel generation of an unknown output sequence.</div></section><section id="en-sec10"><h2><span class="num">10</span>Tokenization: BPE and WordPiece</h2><p>The lecture does mention approximately 30k WordPiece tokens on page 185, but does not explain vocabulary training algorithms. Transformer operates on tokens; a token can be a whole word, part of a word, punctuation, or a whitespace-related piece. The architecture does not require a particular tokenizer.</p><p>A whole-word vocabulary can be large and often maps unseen words to [UNK], losing their identities. Subword vocabularies can express many unseen words as known pieces. Character coverage can still cause [UNK]; complete byte coverage avoids that vocabulary-coverage issue.</p><ul><li><strong>BPE:</strong> repeatedly merge frequent adjacent token pairs. Character-level BPE starts from characters; GPT-2's byte-level BPE starts from bytes. Frequent words may be single tokens, while rare words may split into pieces. For example, “un” + “happi” + “ness” is only an illustration; actual splits depend on the tokenizer.</li><li><strong>WordPiece:</strong> used by BERT, with continuation pieces such as <code>##ing</code>. Vocabulary training is often explained using a vocabulary language-model likelihood objective. It is not the Transformer LM's training likelihood. BERT released its tokenizer and vocabulary, not a complete original vocabulary-training implementation. The teaching score freq(ab)/(freq(a)freq(b)) is a useful illustration, not a verified exact description of BERT's original training rule.</li></ul><div class="callout callout-exam"><div class="label">Interview checkpoint</div>Explain vocabulary size, unseen words, compositional pieces, and the distinction between words and tokens.</div></section><section id="en-sec11"><h2><span class="num">11</span>Transformer families: BERT, GPT, and T5</h2><h3>BERT — Encoder-only (2018)</h3><p>ELMo combines a forward and a backward LSTM language model into a bidirectional LM, but each direction models context separately. BERT jointly integrates visible context from both directions using an Encoder without a causal mask.</p><ul><li><strong>MLM:</strong> select 15% of WordPiece positions as prediction targets. Of those, replace 80% with [MASK], 10% with random tokens, and leave 10% unchanged. Compute the MLM loss only at selected positions. Approximately 12% of all positions therefore become [MASK]. The lecture explicitly gives this rule on page 183.</li><li><strong>NSP:</strong> distinguish the actual next text segment from a randomly sampled segment. RoBERTa removed this objective in its training setup; that does not prove NSP is useless in every setting.</li><li><strong>Base:</strong> 12 layers, width 768, 12 heads, 110M parameters. <strong>Large:</strong> 24 layers, width 1024, 16 heads, 340M parameters.</li><li>BERT uses learned absolute position embeddings and segment embeddings, not the original fixed sin/cos scheme.</li><li>For downstream tasks, add a suitable head and fine-tune. The lecture notes that tuning the whole network often outperforms tuning only the head, unlike the typical frozen-ELMo feature workflow.</li></ul><h3>GPT — Decoder-only</h3><p>The lecture's “ELMo with transformers” phrase is a rough analogy. GPT is a single left-to-right Transformer language model trained to predict the next token. A standard GPT block uses causal Self-Attention without the Encoder Cross-Attention in the original translation decoder.</p><p>Historical lecture figures: GPT-2 trained on 40GB of text; the largest GPT-3 has 175B parameters; T5 reaches 11B. Page 198 quotes approximately 2019 single-pretraining-run cost estimates: BERT Base $500, Large $7,000, and XLNet $30,000–$60,000. These are historical estimates, not current prices or costs for GPT-3.</p><table><tr><th>Architecture</th><th>Examples</th><th>Attention pattern</th><th>Typical uses</th></tr><tr><td>Encoder-only</td><td>BERT, RoBERTa</td><td>Bidirectional; padding masks may apply</td><td>Classification, tagging, representations</td></tr><tr><td>Decoder-only</td><td>GPT-1/2/3, LLaMA</td><td>Causal</td><td>Text generation</td></tr><tr><td>Encoder–Decoder</td><td>Original Transformer, T5, BART</td><td>Bidirectional Encoder; causal Decoder with Cross-Attention</td><td>Translation, summarization</td></tr></table><h3>T5 — Encoder–Decoder (2019/2020)</h3><p>The lecture lists T5's scale on page 203. T5 frames tasks as text-to-text. Its representative pretraining objective is span corruption: replace contiguous spans with sentinel tokens, then have the Decoder autoregressively generate the removed spans and corresponding sentinels.</p><div class="callout callout-add"><div class="label">Pretraining and post-training</div>Pretraining learns language or denoising tasks. Instruction tuning teaches responses to instructions; preference training can use RLHF. RLHF research and applications predate ChatGPT. Scaling laws are empirical relations within particular experimental ranges, not a guarantee that more parameters alone are better. Do not infer the exact blocks of undisclosed commercial models from their names.</div></section><section id="en-sec12"><h2><span class="num">12</span>Summary and interview self-check</h2><div class="summary-grid"><div class="summary-card"><h4>Core idea</h4><p>Use attention to exchange information among positions, and FFNs to transform each position, with residual connections and normalization.</p></div><div class="summary-card"><h4>Parallelism</h4><p>Positions within a Transformer layer can be computed together from the available layer input. Dense attention still has quadratic sequence-length cost.</p></div><div class="summary-card"><h4>Encoder versus Decoder</h4><p>An Encoder is typically bidirectional. An Encoder–Decoder decoder adds causal attention and source Cross-Attention. GPT-style Decoder-only normally omits that Cross-Attention.</p></div><div class="summary-card"><h4>Training objectives</h4><p>BERT: MLM + NSP originally. GPT: next-token causal LM. T5: span corruption in a text-to-text framework.</p></div></div><ol><li>What roles do Q/K/V play?</li><li>Why divide attention scores by √d<sub>k</sub>?</li><li>What can multiple heads provide compared with one wider head?</li><li>What problem does positional encoding solve?</li><li>What do residual connections and LayerNorm do?</li><li>How do causal Self-Attention and Cross-Attention differ?</li><li>Why can training positions be parallelized while ordinary generation is sequential?</li><li>Which architecture and objective do BERT, GPT, and T5 use?</li><li>What problems do BPE and WordPiece address?</li></ol></section><section id="en-sources"><h2>Sources and lecture page references</h2><p>RNN limitations: 114; Attention: 137–145; Self-Attention and heads: 151–160; Encoder diagram and positions: 161; Decoder: 162; model size: 163; ELMo/BERT: 180–188; GPT: 194; historical costs: 198; T5/GPT-3: 203.</p><ul><li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. — Attention Is All You Need</a></li><li><a href="https://aclanthology.org/N19-1423/">Devlin et al. — BERT</a></li><li><a href="https://aclanthology.org/N18-1202/">Peters et al. — ELMo</a></li><li><a href="https://huggingface.co/learn/llm-course/en/chapter6/6">Hugging Face — WordPiece</a></li><li><a href="https://arxiv.org/abs/1910.10683">Raffel et al. — T5</a></li></ul></section><footer>Based on Alan Ritter's CS4641 lectures, with reviewed explanations and additions. This is an independent study guide.</footer></div></div><script>
+(() => {
+ const buttons = [...document.querySelectorAll('[data-language]')];
+ function selectLanguage(lang, updateHash = true) {
+  lang = lang === 'en' ? 'en' : 'zh';
+  document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  document.getElementById('guide-zh').hidden = lang !== 'zh';
+  document.getElementById('guide-en').hidden = lang !== 'en';
+  buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.language === lang)));
+  try { localStorage.setItem('transformer-guide-language', lang); } catch (_) {}
+  if (updateHash) {
+   const match = location.hash.match(/^#(?:en-)?(sec\d+|sources)$/);
+   if (match) {
+    const next = '#' + (lang === 'en' ? 'en-' : '') + match[1];
+    history.replaceState(null, '', next);
+    document.getElementById(next.slice(1))?.scrollIntoView();
+   }
+  }
+ }
+ buttons.forEach(b => b.addEventListener('click', () => selectLanguage(b.dataset.language)));
+ let saved = 'zh';
+ try { saved = localStorage.getItem('transformer-guide-language') || 'zh'; } catch (_) {}
+ const initial = location.hash ? (location.hash.startsWith('#en-') ? 'en' : 'zh') : saved;
+ selectLanguage(initial, false);
+ window.addEventListener('hashchange', () => {
+  if (location.hash) selectLanguage(location.hash.startsWith('#en-') ? 'en' : 'zh', false);
+ });
+})();
+</script></body></html>
